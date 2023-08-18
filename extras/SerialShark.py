@@ -1,5 +1,3 @@
-# Made by @xdavidhu (github.com/xdavidhu, https://xdavidhu.me/)
-
 import serial
 import io
 import os
@@ -7,62 +5,23 @@ import subprocess
 import signal
 import time
 
-try:
-    serialportInput = input("[?] Select a serial port (default '/dev/ttyUSB0'): ")
-    if serialportInput == "":
-        serialport = "/dev/ttyUSB0"
-    else:
-        serialport = serialportInput
-except KeyboardInterrupt:
-    print("\n[+] Exiting...")
-    exit()
+serial_port = "/dev/ttyUSB0"
+board_rate = 921600
+filename = "capture.pcap"
+connection_established = False
 
-try:
-    canBreak = False
-    while not canBreak:
-        boardRateInput = input("[?] Select a baudrate (default '921600'): ")
-        if boardRateInput == "":
-            boardRate = 921600
-            canBreak = True
-        else:
-            try:
-                boardRate = int(boardRateInput)
-            except KeyboardInterrupt:
-                print("\n[+] Exiting...")
-                exit()
-            except Exception as e:
-                print("[!] Please enter a number!")
-                continue
-            canBreak = True
-except KeyboardInterrupt:
-    print("\n[+] Exiting...")
-    exit()
+# TODO: Replace print with log to a file
 
-try:
-    filenameInput = input("[?] Select a filename (default 'capture.pcap'): ")
-    if filenameInput == "":
-        filename = "capture.pcap"
-    else:
-        filename = filenameInput
-except KeyboardInterrupt:
-    print("\n[+] Exiting...")
-    exit()
-
-canBreak = False
-while not canBreak:
+while not connection_established:
     try:
-        ser = serial.Serial(serialport, boardRate)
-        canBreak = True
-    except KeyboardInterrupt:
-        print("\n[+] Exiting...")
-        exit()
+        ser = serial.Serial(serial_port, board_rate)
+        connection_established = True
     except:
         print("[!] Serial connection failed... Retrying...")
         time.sleep(2)
         continue
 
 print("[+] Serial connected. Name: " + ser.name)
-counter = 0
 f = open(filename,'wb')
 
 check = 0
