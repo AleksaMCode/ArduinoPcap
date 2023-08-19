@@ -1,5 +1,4 @@
 import serial
-import io
 import os
 import subprocess
 import signal
