@@ -23,13 +23,14 @@ while not connection_established:
 print("[+] Serial connected. Name: " + ser.name)
 f = open(filename,'wb')
 
-check = 0
-while check == 0:
+has_started = False
+while not has_started:
     line = ser.readline()
     if b"<<START>>" in line:
-        check = 1
+        has_started = True
         print("[+] Stream started...")
-    #else: print '"'+line+'"'
+    else:
+        print(f"Error: {line}")
 
 print("[+] Starting up wireshark...")
 cmd = "tail -f -c +0 " + filename + " | wireshark -k -i -"
